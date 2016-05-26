@@ -1,2 +1,4 @@
 .pioenvs
-settings.h
+.clang_complete
+.gcc-flags.json
+src/settings.h

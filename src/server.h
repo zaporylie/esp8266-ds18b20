@@ -45,7 +45,10 @@ void handleStatus() {
 }
 
 void handleGet() {
-  JsonObject& root = getCurrentState();
+
+  StaticJsonBuffer<2000> jsonBuffer;
+  JsonObject& root = jsonBuffer.createObject();
+  getCurrentState(root);
 
   // Print.
   String temp;

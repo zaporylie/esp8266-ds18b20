@@ -1,5 +1,5 @@
 #define HOSTNAME "temperature"
-#define REPOSITORY "zaporylie/esp8266-ds18b20"
+#define REPOSITORY "espstack/ds18b20"
 
 #define INTERVAL 10000
 #define ONE_WIRE_BUS 0
