@@ -1,0 +1,86 @@
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-Knob/1.2.13/jquery.knob.min.js"></script>
+    <script>
+      var connection;
+
+      var send = function (key, color) {
+        var json = {
+          "get": true,
+        };
+        request = JSON.stringify(json);
+        connection.send(color);
+      }
+
+      var set = function (key, item) {
+        console.log(item);
+        if ($('#' + key, wrapper).length) {
+          $('#' + key, wrapper).replaceWith(template(key, item));
+        }
+        else {
+          $(wrapper).append(template(key, item));
+        }
+      }
+
+      var template = function (key, item) {
+        return '<div id="' + key + '"><label>' + key + '</label> <input type="text" value="' + item + '" class="dial"></div>';
+      }
+
+      var wrapper = ".wrapper";
+      $(document).ready(function () {
+
+        var timeout;
+        $("#host, #port").on('change', function () {
+
+          if (!$('#host').val() || !$('#port').val()) return false;
+
+          connection = new WebSocket("ws://" + $('#host').val() + ":" + $("#port").val() + "/", ['arduino']);
+          connection.onopen = function () {
+            connection.send('Connect ' + new Date());
+            $(".temperature", wrapper).remove();
+          };
+          connection.onerror = function (error) {
+            console.log('WebSocket Error ', error);
+          };
+          connection.onmessage = function (e) {
+            console.log('Server: ', e.data);
+            json = JSON.parse(e.data);
+            for (var property in json) {
+              set(property, json[property]);
+            }
+
+            $(".dial").knob({
+                'min':0,
+                'max':110,
+                "fgColor":"#FF0000",
+                "skin":"tron"
+            });
+          };
+        });
+      });
+    </script>
+    <style>
+      .controllers {
+
+      }
+      .controllers > fieldset {
+        float: left;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Temperature Control</h1>
+    <fieldset class="wrapper">
+    </fieldset>
+    <fieldset>
+      <legend>Settings</legend>
+      <div class="fieldset-wrapper">
+        <div class="field">
+          <label>Server</label>
+          ws://<input type="text" id="host" />:<input type="text" id="port" />/
+        </div>
+      </div>
+    </fieldset>
+  </body>
+</html>

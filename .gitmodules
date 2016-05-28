@@ -1,6 +1,0 @@
-[submodule "lib/WiFiManager"]
-	path = lib/WiFiManager
-	url = https://github.com/tzapu/WiFiManager.git
-[submodule "lib/phant-arduino"]
-	path = lib/phant-arduino
-	url = https://github.com/sparkfun/phant-arduino.git
