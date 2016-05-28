@@ -27,6 +27,10 @@ void setup() {
   server.begin();
   Serial.println ( "HTTP server started" );
 
+  webSocket.begin();
+  webSocket.onEvent(webSocketEvent);
+  Serial.println ( "WebSocket server started" );
+
   sensors.begin();
 
   ArduinoOTA.onStart([]() {
@@ -52,6 +56,7 @@ void setup() {
 
 void loop() {
   ArduinoOTA.handle();
+  webSocket.loop();
   server.handleClient();
   log();
 }

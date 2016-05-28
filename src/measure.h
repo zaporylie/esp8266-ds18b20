@@ -45,39 +45,3 @@ void getCurrentState(JsonObject& root) {
     }
   }
 }
-
-/**
- * Publish data to Phant.
- */
-void publish() {
-  StaticJsonBuffer<2000> jsonBuffer;
-
-  JsonObject& root = jsonBuffer.createObject();
-  getCurrentState(root);
-
-  Phant phant(PHANT_HOST, PHANT_STREAMID, PHANT_PRIVATEKEY);
-
-  for(JsonObject::iterator it=root.begin(); it!=root.end(); ++it) {
-    phant.add((String)it->key, it->value.as<float>());
-  }
-
-  WiFiClient client;
-  const int httpPort = 80;
-  if (!client.connect(PHANT_HOST, httpPort)) {
-    Serial.println("connection failed");
-    // return "Failed";
-  }
-  client.print(phant.post());
-}
-
-/**
- * Log based on interval.
- */
-void log() {
-  unsigned long currentMillis = millis();
-
-  if(currentMillis - previousMillis > INTERVAL) {
-    previousMillis = currentMillis;
-    publish();
-  }
-}
